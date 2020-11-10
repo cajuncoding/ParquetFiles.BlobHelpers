@@ -17,9 +17,9 @@ by setting a threshold limit the denotes the maximum size of which a MemoryStrea
 for high perfomrance of MemoryStreams whenever possible, but enabling FileStream anytime the environment has
 more constrained memory (e.g. Azure Functions with only 1GB RAM).
 
-The FileStream work is fully encapsulated but overridable if needed via virtual methods.  A local temp File is 
-created and used for managing the stream of data, and the Streams and any needed Temp files are cleaned up
-as soon as the `ParquetBlobReader` is properly disposed of.
+When necessary, per configuration, the FileStream work is fully encapsulated but overridable if needed via virtual method. 
+A local temp file is created and used for managing the stream of data. Then the stream, as well as the temp file, is 
+automatically cleaned up as soon as the `ParquetBlobReader` is properly disposed -- which it must be via IDisposable.
 
 *Note: As of this initial version we leverage the 
 [**Fast Automatic Serialization functionality**](https://github.com/elastacloud/parquet-dotnet/blob/master/doc/serialisation.md) 
