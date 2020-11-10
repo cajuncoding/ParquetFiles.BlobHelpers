@@ -63,6 +63,9 @@ into Azure Sql via your ORM or for high performance using SqlBulkHelpers (if you
     //Create an instance of ParquetBlobReader() which MUST be Disposed of properly...
     using (var parquetReader = new ParquetBlobReader(blobStorageConnectionString, blobContainer, blobFilePath, options))
     { 
+        //Open & initialize the Blob Stream (this will download the blob data)...
+        await parquetReader.OpenAsync();
+        
         //Example of Reading a Parquet File into the specified Model (by Generic Type) 
         // and enumerating the results provided by the IEnumerable result...
         var x = 1;
