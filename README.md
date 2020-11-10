@@ -21,10 +21,13 @@ The FileStream work is fully encapsulated but overridable if needed via virtual 
 created and used for managing the stream of data, and the Streams and any needed Temp files are cleaned up
 as soon as the `ParquetBlobReader` is properly disposed of.
 
-*Note: As of this initial version we leverage the `ParquetConvert.Deserialize<TModel>(...)` built in functionality of Parquet-DotNet to Deserialise
-the data from the Parquet file into class Models.  This was convenient, however it seems to have alot of dependencies
-on models with Nullable properties, and can actual load data incorrectly when they aren't nullable.  So pending
-further testinga and real world usage we may have to implement our own processing of the data....*
+*Note: As of this initial version we leverage the 
+[**Fast Automatic Serialization functionality**](https://github.com/elastacloud/parquet-dotnet/blob/master/doc/serialisation.md) 
+ built in functionality of Parquet-DotNet to Deserialise the data from the Parquet file into class Models -- 
+`ParquetConvert.Deserialize<TModel>(...)`.  This is convenient and initial testing shows solid performance (as expected).
+However it seems to have alot of dependencies on models with Nullable properties, and can actual load data 
+incorrectly when they aren't nullable.  So pending further testinga and real world usage we may have to 
+implement our own processing of the data....*
 
 ### Dependencies
 1. [Parquet-DotNet](https://github.com/elastacloud/parquet-dotnet#apache-parquet-for-net-platform) -- The goto Parquet File reader for C# & .Net.
