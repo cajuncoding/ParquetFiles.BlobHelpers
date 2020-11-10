@@ -1,0 +1,2 @@
+# ParquetFile.BlobHelpers
+A console application to illustrate how to read and load data into class models from Parquet files saved to Azure Blob Storage using Parquet .Net (parquet-dotnet).  This is useful for E-L-T processes whereby you need to load the data into Memory, Sql Server (e.g. Azure SQL), etc. or any other location where there is no built-in or default mechanism for working with Parquet data.
