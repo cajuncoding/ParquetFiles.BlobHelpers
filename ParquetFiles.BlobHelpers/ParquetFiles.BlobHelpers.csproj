@@ -4,7 +4,7 @@
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<Authors>BBernard / CajunCoding</Authors>
 		<Company>CajunCoding</Company>
-		<Description>A tiny library simplify working with Parquet Files with Azure Blob Storage using Parquet .Net (parquet-dotnet). Providing easy helpers to load data into class models from Parquet files. This is useful for E-L-T processes whereby you need to load the data into Memory, Sql Server (e.g. Azure SQL), etc. or any other location where there is no built-in support for easily working with Parquet file data.</Description>
+		<Description>A tiny library to simplify working with Parquet Files with Azure Blob Storage using Parquet .Net (parquet-dotnet). Providing easy helpers to load data into class models from Parquet files. This is useful for E-L-T processes whereby you need to load the data into Memory, Sql Server (e.g. Azure SQL), etc. or any other location where there is no built-in support for easily working with Parquet file data.</Description>
 		<Copyright>Copyright © 2020</Copyright>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/cajuncoding/ParquetFiles.BlobHelpers</PackageProjectUrl>
