@@ -1,10 +1,8 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Parquet;
-using Parquet.Data;
 using ParquetFiles.BlobHelpers;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -29,7 +27,6 @@ namespace ParquetFile.BlobHelpers
 
         protected Stream _blobStream;
         protected FileInfo _tempFileInfo;
-        protected ParquetReader _parquetReader;
 
         public ParquetBlobReader(string blobConnectionString, string blobContainerName, string blobFilePath, ParquetBlobReaderOptions options = null)
         {
@@ -42,46 +39,31 @@ namespace ParquetFile.BlobHelpers
         public async Task<ParquetBlobReader> OpenAsync(CancellationToken cancellationToken = default)
         {
             _blobStream = await CreateBlobContentStreamAsync(cancellationToken);
-            _parquetReader = new ParquetReader(_blobStream);
             return this;
         }
 
-        public DataField[] ReadDataFields()
-        {
-            var dataFields = _parquetReader.Schema.GetDataFields();
-            return dataFields;
-        }
-
         /// <summary>
-        /// Provid an IEnumeragle interface to the Parquet.Net Deserialization of Data for efficient
-        /// processinga with support for Linq processing if/when needed.
+        /// Provide an IEnumerable interface to the Parquet.Net Deserialization of Data for efficient
+        /// processing with support for Linq processing if/when needed.
         /// WARNING: Care must be taken to prevent Multiple Enumerations unnecessarily such as being sure
         ///             to project filtered results into a List (e.g. ToList())!
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public IEnumerable<T> Read<T>() where T : new()
+        public async Task<T[]> ReadAllAsync<T>() where T : new()
         {
-            AssertParquetReaderIsOpen();
+            //Now in the updated Parquet.NET API v4+ they now provide fully Async methods, but only provide
+            //  the ability to read all data in one request (so we can no longer easily yeild by groups).
+            //Therefore, to be consistent with he underlying API we switch back to their approach to ensure we are using
+            //  as much of hte underlying API as we can, and hope they will improve the API in the future to be more flexible.
+            var timer = Stopwatch.StartNew();
 
-            //It seemst hat the only API that works consistently is this one whereby we loop the RowGroups ourselves
-            //  but this also provies a little more control over the IEnumerable processing by not forcing all rows & row-groups
-            //  to be in memory at one time.
-            for (int g = 0; g < _parquetReader.RowGroupCount; g++)
-            {
-                LogDebug($"Enumerating over RowGroup #[{g}]...");
-                var timer = Stopwatch.StartNew();
+            var results = await ParquetConvert.DeserializeAsync<T>(_blobStream);
 
-                var group = ParquetConvert.Deserialize<T>(_blobStream, g);
-
-                timer.Stop();
-                LogDebug($"Deserialized RowGroup [{g}] from the Stream in [{timer.ToElapsedTimeDescriptiveFormat()}].");
-
-                foreach (var item in group)
-                {
-                    yield return item;
-                }
-            }
+            timer.Stop();
+            LogDebug($"Deserialized RowGroup [{results.Length}] items from the Stream in [{timer.ToElapsedTimeDescriptiveFormat()}].");
+            
+            return results;
         }
 
         protected virtual async Task<Stream> CreateBlobContentStreamAsync(CancellationToken cancellationToken)
@@ -124,9 +106,9 @@ namespace ParquetFile.BlobHelpers
                 LogDebug($"Memory Stream created successfully...");
             }
 
-            //Downlaod the Data from Blob to the Stream and return the Readable/Seekable stream for processing...
+            //Download the Data from Blob to the Stream and return the Readable/Seekable stream for processing...
             LogDebug($"Downloading Data ~[{blobSizeInMB} MB] into the local stream...");
-            await blobClient.DownloadToAsync(blobStream);
+            await blobClient.DownloadToAsync(blobStream, cancellationToken);
             LogDebug($"Successfully downloaded the Blob data in [{timer.ToElapsedTimeDescriptiveFormat()}]...");
             
             return blobStream;
@@ -134,7 +116,8 @@ namespace ParquetFile.BlobHelpers
        
         protected virtual void LogDebug(string message)
         {
-            this.Options?.LogDebug?.Invoke(message);
+            if(this.Options.LoggingEnabled)
+                this.Options.LogDebug.Invoke(message);
         }
 
         protected virtual void AssertParquetReaderOptionsAreValid()
@@ -145,22 +128,10 @@ namespace ParquetFile.BlobHelpers
             }
         }
 
-        protected virtual void AssertParquetReaderIsOpen()
-        {
-            AssertParquetReaderOptionsAreValid();
-            
-            if (_parquetReader == null || _blobStream == null)
-            {
-                throw new InvalidOperationException($"The Parque Reader has not been initialized; " +
-                    $"ensure that {nameof(OpenAsync)} has been correctly called.");
-            }
-        }
-
         public void Dispose()
         {
             //NOTE: We MUST dispose of of items in this order to eliminate issues with Locks and risk of leaving
             //      the stream (e.g. file) with a current lock, etc.
-            _parquetReader?.Dispose();
             _blobStream?.Dispose();
 
             if(_tempFileInfo != null)

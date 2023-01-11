@@ -1,16 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<Authors>BBernard / CajunCoding</Authors>
+		<Company>CajunCoding</Company>
+		<Description>A tiny library simplify working with Parquet Files with Azure Blob Storage using Parquet .Net (parquet-dotnet). Providing easy helpers to load data into class models from Parquet files. This is useful for E-L-T processes whereby you need to load the data into Memory, Sql Server (e.g. Azure SQL), etc. or any other location where there is no built-in support for easily working with Parquet file data.</Description>
+		<Copyright>Copyright © 2020</Copyright>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageProjectUrl>https://github.com/cajuncoding/ParquetFile.BlobHelpers</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/cajuncoding/ParquetFile.BlobHelpers</RepositoryUrl>
+		<PackageTags>parquet file apache csharp c# azure blob storage azure functions azurefunction sqlazure</PackageTags>
+		<Version>2.0</Version>
+		<PackageReleaseNotes>
+			- Updated to use the latest Parquet.NET v4.2.2
+			- Breaking changes in the underlying Parquet.NET necessitated breaking changes -- mainly Read&lt;T&gt;() is now fully async but no longer supports yielding enumerable so is now ReadAllAsync&lt;T&gt;()
 
-  <ItemGroup>
-    <None Include="..\README.md" Link="README.md" />
-  </ItemGroup>
+			Prior Release Notes:
+			- Initial stable functioning release.
+		</PackageReleaseNotes>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.6.0" />
-    <PackageReference Include="Parquet.Net" Version="3.8.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\README.md" Link="README.md" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Azure.Storage.Blobs" Version="12.14.1" />
+		<PackageReference Include="Parquet.Net" Version="4.2.2" />
+	</ItemGroup>
 
 </Project>

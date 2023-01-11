@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Parquet;
 
 
 namespace ConsoleApp
@@ -12,36 +13,42 @@ namespace ConsoleApp
     {
         static async Task Main(string[] args)
         {
-            var blobStorageConnectionString = Config.AzureBlobStorageConnectionString;
-            var blobContainer = Config.BlobContainerName;
-            var blobFilePath = Config.BlobFilePath;
+            var config = new ParquetReaderConsoleAppConfig();
+            var options = new ParquetBlobReaderOptions() { LogDebug = Console.WriteLine };
 
-            var options = new ParquetBlobReaderOptions()
+            //Reader is IDisposable!
+            using var parquetBlobReader = await new ParquetBlobReader(
+                config.AzureBlobStorageConnectionString,
+                config.BlobContainerName,
+                config.BlobFilePath, 
+                options
+            ).OpenAsync();
+
+            //Example of Reading a Parquet File into the specified Model (by Generic Type) and enumerating the results.
+            //We also implement a Linq Filter to illustrate working with IEnumerable and Linq.
+            //NOTE: We must project the filtered results into a List (since we are pre-filtering)
+            //          this guarantees that we do not enumerate the results twice (multiple-enumeration):
+            //          First for the Count() and then for the Foreach Loop...
+            var results = (await parquetBlobReader.ReadAllAsync<ItemModel>()).OrderBy(r => r.Id);
+
+            var x = 1;
+            Console.WriteLine($"[{results.Count()}] Valid Items found!");
+            foreach (var item in results)
             {
-                LogDebug = (message) => Console.WriteLine(message)
-            };
-
-            using (var parquetReader = await new ParquetBlobReader(blobStorageConnectionString, blobContainer, blobFilePath, options).OpenAsync())
-            { 
-                var validStatuses = new List<int?> { 1, 2, 3 };
-
-                //Example of Reading a Parquet File into the specified Model (by Generic Type) and enumerating the results.
-                //We also implement a Linq Filter to illustrate working with IEnumerable and Linq.
-                //NOTE: We must project the filtered results into a List (since we are pre-filtering)
-                //          this guarantees that we do not enumerate the results twice (multiple-enumeration):
-                //          First for the Count() and then for the Foreach Loop...
-                var results = parquetReader.Read<ItemModel>()
-                                .Where(e => validStatuses.Contains(e.StatusId))
-                                .ToList();
-
-                var x = 1;
-                Console.WriteLine($"[{results.Count()}] Valid Items found after Filtering!");
-                foreach (var item in results)
-                {
-                    Console.WriteLine($"{x++}) {item.Id} -- {item.Name} [Status={item.StatusId}]");
-                }
+                //Console.WriteLine($"{x++}) {item.Id} -- {item.Category} [Budget={item.Budget}; InternalCost={item.InternalCost}]");
+                Console.WriteLine($"{x++}) {item}");
             }
 
+            Console.ReadKey();
+        }
+
+        public class FCModel
+        {
+            [ParquetColumn("name")]
+            public string? Name { get; set; }
+
+            [ParquetColumn("budget")]
+            public decimal? Budget { get; set; }
         }
     }
 }
