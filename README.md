@@ -22,6 +22,7 @@ To use in your project, add the [ParquetFiles.BlobHelpers NuGet package](https:/
 - Updated to use the latest Parquet.NET v4.2.2
 - Breaking changes in the underlying Parquet.NET necessitated breaking changes here in our API:
     - Mainly `Read<T>()` is now `ReadAllAsync<T>()` -- fully async but no longer supports yielding the enumerable due to limitations in the underlying `ParquetConvert` class at this time.
+- Namespace was fixed for consistency ParquetFile.BlobHelpers is now ParquetFiles.BlobHelpers (plural).
 
 ### v1.0 Release Notes:
 - Initial stable functioning release.

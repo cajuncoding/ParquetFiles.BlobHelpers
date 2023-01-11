@@ -14,6 +14,7 @@
 		<PackageReleaseNotes>
 			- Updated to use the latest Parquet.NET v4.2.2
 			- Breaking changes in the underlying Parquet.NET necessitated breaking changes -- mainly Read&lt;T&gt;() is now fully async but no longer supports yielding enumerable so is now ReadAllAsync&lt;T&gt;()
+			- Namespace was fixed for consistency ParquetFile.BlobHelpers is now ParquetFiles.BlobHelpers (plural).
 
 			Prior Release Notes:
 			- Initial stable functioning release.
