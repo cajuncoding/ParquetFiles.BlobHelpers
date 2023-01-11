@@ -1,14 +1,13 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Parquet;
-using ParquetFiles.BlobHelpers;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ParquetFile.BlobHelpers
+namespace ParquetFiles.BlobHelpers
 {
     public class ParquetBlobReaderOptions
     {

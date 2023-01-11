@@ -1,7 +1,7 @@
 ﻿using System;
 using Parquet;
 
-namespace ParquetFile.Models
+namespace ParquetFiles.Models
 {
     public class ItemModel
     {

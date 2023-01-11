@@ -1,5 +1,5 @@
-﻿using ParquetFile.BlobHelpers;
-using ParquetFile.Models;
+﻿using ParquetFiles.BlobHelpers;
+using ParquetFiles.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

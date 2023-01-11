@@ -16,7 +16,7 @@ then I do love-me-some-coffee!*
 </a> 
 
 ## Nuget Package
-To use in your project, add the [ParquetFile.BlobHelpers NuGet package](https://www.nuget.org/packages/ParquetFiles.BlobHelpers) to your project.
+To use in your project, add the [ParquetFiles.BlobHelpers NuGet package](https://www.nuget.org/packages/ParquetFiles.BlobHelpers) to your project.
 
 ### v2.0 Release Notes:
 - Updated to use the latest Parquet.NET v4.2.2
@@ -26,7 +26,7 @@ To use in your project, add the [ParquetFile.BlobHelpers NuGet package](https://
 ### v1.0 Release Notes:
 - Initial stable functioning release.
 
-### Details
+## Details
 As noted in the Parquet-DotNet documentation, processing data from a parquet file requires alot of seeking and therefore
 requires that the file be provided in a readable and seekable Stream! This precludes the ability to read data
 while streaming down from Blob in real-time -- the entire file must be locally available.

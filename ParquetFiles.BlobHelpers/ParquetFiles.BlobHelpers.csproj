@@ -7,8 +7,8 @@
 		<Description>A tiny library simplify working with Parquet Files with Azure Blob Storage using Parquet .Net (parquet-dotnet). Providing easy helpers to load data into class models from Parquet files. This is useful for E-L-T processes whereby you need to load the data into Memory, Sql Server (e.g. Azure SQL), etc. or any other location where there is no built-in support for easily working with Parquet file data.</Description>
 		<Copyright>Copyright © 2020</Copyright>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageProjectUrl>https://github.com/cajuncoding/ParquetFile.BlobHelpers</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/cajuncoding/ParquetFile.BlobHelpers</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/cajuncoding/ParquetFiles.BlobHelpers</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/cajuncoding/ParquetFiles.BlobHelpers</RepositoryUrl>
 		<PackageTags>parquet file apache csharp c# azure blob storage azure functions azurefunction sqlazure</PackageTags>
 		<Version>2.0</Version>
 		<PackageReleaseNotes>
