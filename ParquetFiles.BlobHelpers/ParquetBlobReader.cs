@@ -60,7 +60,7 @@ namespace ParquetFiles.BlobHelpers
             var results = await ParquetConvert.DeserializeAsync<T>(_blobStream);
 
             timer.Stop();
-            LogDebug($"Deserialized RowGroup [{results.Length}] items from the Stream in [{timer.ToElapsedTimeDescriptiveFormat()}].");
+            LogDebug($"Deserialized [{results.Length}] items from the Stream in [{timer.ToElapsedTimeDescriptiveFormat()}].");
             
             return results;
         }
