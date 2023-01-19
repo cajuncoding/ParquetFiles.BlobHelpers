@@ -10,15 +10,17 @@
 		<PackageProjectUrl>https://github.com/cajuncoding/ParquetFiles.BlobHelpers</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/cajuncoding/ParquetFiles.BlobHelpers</RepositoryUrl>
 		<PackageTags>parquet file apache csharp c# azure blob storage azure functions azurefunction sqlazure</PackageTags>
-		<Version>2.0.1</Version>
+		<Version>2.0.2</Version>
 		<PackageReleaseNotes>
+			- Updated to latest Parquet.NET library now that DateTime Null parsing issues are now resolved in the Parquet.NET library with v4.3.2.
+			- Removed duplicated ParquetColumnAttribute class now so there won't be conflicts once updated to this version of the BlobHelpers.
+
+			Prior Release Notes:
 			- Reverted back to Parquet.NET v4.1.3 due to critical bugs that fail to load null values for DateTime? from Parquet files (see: https://github.com/aloneguid/parquet-dotnet/issues/224)
 			- Added Parquet Column Attribute (duplicated class) to the root Parquet namespace so that if you have already migrated your models to v4.2+ then it will work without any changes now with this as a compatibility shim already included (for now).
 			- Breaking changes in the underlying Parquet.NET necessitated breaking changes -- mainly Read&lt;T&gt;() is now fully async but no longer supports yielding enumerable so is now ReadAllAsync&lt;T&gt;()
 			- Namespace was fixed for consistency ParquetFile.BlobHelpers is now ParquetFiles.BlobHelpers (plural).
 			- Fixed Log messaging typo.
-
-			Prior Release Notes:
 			- Initial stable functioning release.
 		</PackageReleaseNotes>
 	</PropertyGroup>
@@ -29,7 +31,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Azure.Storage.Blobs" Version="12.14.1" />
-		<PackageReference Include="Parquet.Net" Version="4.1.3" />
+		<PackageReference Include="Parquet.Net" Version="4.3.2" />
 	</ItemGroup>
 
 </Project>
